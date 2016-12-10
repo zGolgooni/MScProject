@@ -1,1 +1,1 @@
-# MScThesis
+# MScProject
