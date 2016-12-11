@@ -68,10 +68,9 @@ for i,name in enumerate(arrhythmic_samples):
     predicted1 = model.predict(xx)
     rmse = np.sqrt(((predicted1 - y) ** 2).mean(axis=0))
 
-    print(name+"------> rmse1 = ")
-    print(rmse)
+    print(name+"------> rmse1 = %f" %rmse)
     #distance, p= dtw(y, predicted1)
-    #print(distance)
+    #print(name+"------> rmse1 = %f" distance)
     #bland_altman_plot(y,predicted1,name)
 
     trace1 = go.Scatter(y=y[:10000], name='Real signal')
