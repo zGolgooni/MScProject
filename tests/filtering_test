@@ -1,0 +1,37 @@
+__author__ = 'ZG'
+import numpy as np
+import plotly.plotly as py
+import plotly.graph_objs as go
+from tools.lowpass_filter import lowpass_filter
+
+path = '/Users/Zeynab/PycharmProjects/Msc_project/data/arrhythmic/'
+filename = 'SSC2 R2 8 30 Nov iso Arrhythmic'
+column = 1
+dataset = np.loadtxt(path + filename + '.txt', skiprows=1)
+data = dataset[:, 1]
+
+fs = 2000       # sample rate, Hz
+cutoff1 = 500
+cutoff2 = 500
+cutoff3 = 300
+y1 = lowpass_filter(data, cutoff1, fs, order=2)
+y2 = lowpass_filter(data, cutoff2, fs, order=6)
+y3 = lowpass_filter(data, cutoff3, fs, order=2)
+
+
+trace1 = go.Scatter(y=data[:2000], name='Real signal')
+trace2 = go.Scatter(y=y1[:2000], name='Filtered signal, cutoff=' + cutoff1)
+trace3 = go.Scatter(y=y2[:2000], name='Filtered signal, cutoff='+ cutoff2)
+trace4 = go.Scatter(y=y3[:2000], name='Filtered signal, cutoff=' + cutoff3)
+
+layout = go.Layout(title=filename)
+figure = go.Figure(data=[trace1, trace2,trace3, trace4], layout=layout)
+py.plot(figure, filename='filtering test of ' + filename)
+
+
+"""
+#plot by matplotlib
+plt.grid()
+plt.plot(dataset[:10000,0],data[:10000,1])
+plt.plot(dataset[:10000,0],y1[:10000])
+"""
