@@ -1,4 +1,4 @@
-__author__ = 'Zeynab'
+__author__ = 'ZG'
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.plotly as py
