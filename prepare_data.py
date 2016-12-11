@@ -1,4 +1,4 @@
-__author__ = 'Zeynab'
+__author__ = 'ZG'
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from settings import look_back
