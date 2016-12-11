@@ -1,4 +1,4 @@
-__author__ = 'Zeynab'
+__author__ = 'ZG'
 from scipy.signal import butter, lfilter, freqz
 
 
