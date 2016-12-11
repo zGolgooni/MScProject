@@ -1,4 +1,4 @@
-__author__ = 'Zeynab'
+__author__ = 'ZG'
 import numpy as np
 from keras.models import Sequential
 from keras.layers.core import Dense
