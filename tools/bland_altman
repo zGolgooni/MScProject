@@ -1,0 +1,26 @@
+__author__ = 'Zeynab'
+import numpy as np
+import matplotlib.pyplot as plt
+import plotly.plotly as py
+import plotly.graph_objs as go
+
+
+#Plot Bland-Altman by plotly
+def bland_altman_plot(data1, data2, title='Bland Altman plot'):
+    data1 = np.asarray(data1)
+    data2 = np.asarray(data2)
+    mean = np.mean([data1, data2], axis=0)
+    diff = data1 - data2                 # Difference between data1 and data2
+    md = np.mean(diff)                   # Mean of the difference
+    sd = np.std(diff, axis=0)            # Standard deviation of the difference
+    trace1 = go.Scatter(y=diff, x=mean, mode='markers')
+
+    length = mean.shape[0]
+    trace2 = go.Scatter(y=np.full((length, 1), md), x=mean, line=dict(dash='dash'), name='MEAN')
+    trace3 = go.Scatter(y=np.full((length, 1), md+1.96*sd), x=mean, line=dict(dash='dash'), name='+1.96 SD')
+    trace4 = go.Scatter(y=np.full((length, 1), md-1.96*sd), x=mean, line=dict(dash='dash'), name='-1.96 SD')
+
+    layout = go.Layout(title=title, xaxis=dict(title='average'), yaxis=dict(title='difference'))
+    figure = go.Figure(data=[trace1, trace2, trace3, trace4], layout=layout)
+    url = py.plot(figure)
+    return url
