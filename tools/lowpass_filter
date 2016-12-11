@@ -1,14 +1,5 @@
 __author__ = 'Zeynab'
-import numpy as np
 from scipy.signal import butter, lfilter, freqz
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas
-from keras.layers import LSTM
-from keras.layers.core import Dense, Dropout, Activation
-from keras.models import Sequential
-import plotly.plotly as py
-import plotly.graph_objs as go
 
 
 def butter_lowpass(data, normal_cutoff, order=5):
