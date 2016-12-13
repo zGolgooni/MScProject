@@ -17,7 +17,7 @@ def load_data(data, n_prev=look_back):
 
 
 #Normalize data in specified range
-def normalize_data(dataset, max_range=1):
-    scaler = MinMaxScaler(feature_range=(0, max_range))
+def normalize_data(dataset, max_range=100, min_range=0):
+    scaler = MinMaxScaler(feature_range=(min_range, max_range))
     data = scaler.fit_transform(dataset)
     return data
