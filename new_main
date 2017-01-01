@@ -1,0 +1,88 @@
+__author__ = 'ZG'
+
+import numpy as np
+import pandas
+from keras.layers import LSTM
+from keras.layers.core import Dense, Dropout, Activation
+from keras.models import Sequential
+import plotly.plotly as py
+import plotly.graph_objs as go
+from sklearn.preprocessing import MinMaxScaler
+
+
+#function to load data -> number of look back pints = 100
+def load_data(data, n_prev=look_back):
+    doc_x, doc_y = [], []
+    for i in range(len(data)-n_prev):
+        doc_x.append(data.iloc[i:i+n_prev].as_matrix())
+        doc_y.append(data.iloc[i+n_prev].as_matrix())
+    als_x = np.array(doc_x)
+    als_y = np.array(doc_y)
+    return als_x, als_y
+
+#Normalize data in specified range
+def normalize_data(dataset, max_range=100, min_range=0):
+    scaler = MinMaxScaler(feature_range=(min_range, max_range))
+    data = scaler.fit_transform(dataset)
+    #move to fit baseline to zero
+    index = np.where(dataset == 0)
+    value = data[index[0][0]]
+    data=data-value
+    return data
+
+    
+look_back = 1000
+min_range = -50
+max_range = 50
+
+
+#create model -> here a simple LSTM
+model = Sequential()
+model.add(LSTM(300, input_dim=look_back, return_sequences=False))
+model.add(Dropout(0.5))
+model.add(Dense(1))
+model.add(Activation('linear'))
+model.compile(loss="mean_squared_error", optimizer="rmsprop")
+
+
+#load train data
+# ~50500 points from each file
+path = '/Users/Zeynab/PycharmProjects/Control/'
+#normal_train = ['SSC1-Nif 95.7.3 0nM Control','Control Bam QTC_col1','ES-CM N1','ES-CM Nr50001','SSC2 R1 4 29 Nov iso Control','SSC2-iso 95.6.30 0nM Ch65 Control','Control Bam R09_mine2','SSC2 R2 7 30 Nov baseline Control','SSC2 R2 DIV8 R2 6 16 Nov baseline Control','iPS-CM Nr.1','SSC1-Nif 95.7.10 10nM Control','ES-CM N20001','ES-CM Nr50002']
+not_trained = ['ES-CM Nr5','SSC2 R1 DIV8 R2 1 12 Nov Control','SSC2-Nif 95.6.30 0nM Ch26 Control','SSC R2 19 Oct baseline Control','SSC1-iso 95.7.3 0nM Control']
+normal_train = ['SSC1-Nif 95.7.3 0nM Control','Control Bam QTC','ES-CM N1','ES-CM Nr50001','SSC2 R1 4 29 Nov iso Control','SSC2-iso 95.6.30 0nM Ch65 Control','Control Bam R09','SSC2 R2 7 30 Nov baseline Control','SSC2 R2 DIV8 R2 6 16 Nov baseline Control','iPS-CM Nr.1','SSC1-Nif 95.7.10 10nM Control','ES-CM N20001','ES-CM Nr50002','ES-CM Nr3','SSC1 R2 iso-pro 95.7.12 baseline Control','SSC1-baseline 5 Oct Control','Control SSc2 10 Oct R2 Ver','ES-CM N2','SSC1 R1-baseline 7 Oct Control','SSC2 R2 DIV8 R2 6 16 Nov iso Control','SSC R2 1 19 Oct baseline Control ','SSC2 R2 3 29 Nov baseline Control']
+
+train_x_reshaped = np.empty([0, 1, look_back])
+train_y = np.empty([0, 1])
+
+for i, filename in enumerate(normal_train):
+    #dataset = pandas.read_csv(path + filename + '.csv', usecols=[1], engine='python')
+    dataset = np.loadtxt(path + filename + '.txt', skiprows=1)
+    time_interval = dataset[1:0] -dataset[0:0]
+    if time_interval == 0.5:
+        data = dataset[::2, 1]
+        sampling_rate = 2000
+    else:
+        data = dataset[:,1]
+        sampling_rate = 1000
+        
+    dataset = pandas.DataFrame(data)
+    dataset = pandas.DataFrame(normalize_data(dataset, max_range, min_range))
+    sample_x, sample_y = load_data(dataset[:50500], look_back)
+    sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
+    if i == 0:
+        train_x_reshaped = sample_x_reshaped
+        train_y = sample_y
+    else:
+        train_x_reshaped = np.concatenate([train_x_reshaped, sample_x_reshaped])
+        train_y = np.concatenate([train_y, sample_y])
+    print("%d ----->%s,  sampling rate=%d" % ((i + 1),filename,sampling_rate))
+
+print("train data is ready")
+
+
+# fit model by train data
+model.fit(train_x_reshaped, train_y, batch_size=300, nb_epoch=80, validation_split=0.15)
+print("OK! lets check it!!")
+
+model.save_weights('model_300node_norm50_300b_80e.h5')
