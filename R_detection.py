@@ -27,10 +27,22 @@ temp_rpeaks = out.__getitem__('rpeaks')
 rpeaks = np.empty([temp_rpeaks.shape[0], 1],dtype=int)
 for i,r in enumerate(temp_rpeaks):
     #find maximum
-    signal_slice = abs(signal[r - 50: r+50, :])
-    max_val = np.amax(signal_slice)
-    max_index = np.argmax(signal_slice) -50 + r
-    rpeaks[i] = signal[max_index,0]
+    rpeaks[i] = r
+    max_best_so_far = r
+    end = False
+    while not end:
+        end = True
+        for j in range(25):
+            neighbor1 = max_best_so_far - j
+            neighbor2 = max_best_so_far + j
+            if abs(signal[neighbor1, 1]) > abs(signal[max_best_so_far,1]):
+                max_best_so_far = neighbor1
+                end = False
+            if abs(signal[neighbor2, 1]) > abs(signal[max_best_so_far,1]):
+                max_best_so_far = neighbor2
+                end = False
+    rpeaks[i] = max_best_so_far
+
 
 print('finished finalizing r points! :)')
 trace1 = go.Scatter(y=signal[:20000,1], x=signal[:20000,0], name='Signal')
@@ -92,6 +104,13 @@ for i, r in enumerate(r_values):
 
 """
 rpeaks = np.empty([temp_rpeaks.shape[0], 1],dtype=int)
+for i,r in enumerate(temp_rpeaks):
+    #find maximum
+    signal_slice = abs(signal[r - 50: r+50, :])
+    max_val = np.amax(signal_slice)
+    max_index = np.argmax(signal_slice) -50 + r
+    rpeaks[i] = signal[max_index,0]
+
 for i,r in enumerate(temp_rpeaks):
     #find maximum
     rpeaks[i] = r
