@@ -1,7 +1,6 @@
 __author__ = 'Zeynab'
 import csv,pandas
 import numpy as np
-import numpy as np
 from biosppy.signals.tools import smoother,filter_signal
 import matplotlib.pyplot as plt
 import plotly.plotly as py
@@ -37,8 +36,8 @@ def normalize_data(dataset, max_range=100, min_range=0):
     data = data-value
     return data
 
-
-with open('/Users/Zeynab/Desktop/before 95.08.csv') as csvfile:
+main_path = '/home/mll/Golgooni/Msc_project'
+with open(main_path + '/My data/before 95.08.csv') as csvfile:
     readCSV = csv.reader(csvfile)
     paths = []
     names = []
@@ -61,12 +60,12 @@ with open('/Users/Zeynab/Desktop/before 95.08.csv') as csvfile:
     print(sampling_rates)
 
 
-for i in range(len(names) +1):
+for i in range(len(names)):
     name = names[i]
-    dataset = np.loadtxt(paths[i] + names[i] + '.txt', skiprows=1)
+    dataset = pandas.read_csv(main_path + paths[i] + names[i] + '.txt', delimiter='\t')
     sampling_rate = sampling_rates[i]
-    x_signal = dataset[:, 0]
-    y_signal = dataset[:, 1]
+    x_signal = dataset.values[:,0]
+    y_signal = dataset.values[:, 1]
     normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
     """
     smoothed_signal, params = smoother(normalized_signal)
@@ -89,4 +88,50 @@ for i in range(len(names) +1):
     print("%d ----->%s,  sampling rate=%s" % ((i + 1),name,sampling_rate))
 
 
-print('train sample is ready! :)')
+print('train samples 1 is ready! :)')
+
+with open(main_path + '/My data/from 95.8.2 till 95.9.17.csv') as csvfile:
+    readCSV = csv.reader(csvfile)
+    paths = []
+    names = []
+    sampling_rates = []
+    labels = []
+    next(readCSV)
+    for row in readCSV:
+        path = row[0]
+        name = row[1]
+        sampling_rate = row[2]
+        label = row[3]
+        if (label == 'Normal'):
+            paths.append(path)
+            names.append(name)
+            sampling_rates.append(sampling_rate)
+            labels.append(label)
+
+    print(paths)
+    print(names)
+    print(sampling_rates)
+
+for i in range(len(names)):
+    name = names[i]
+    dataset = pandas.read_csv(main_path + paths[i]+'/'+names[i] + '.txt', delimiter='\t')
+    sampling_rate = sampling_rates[i]
+    x_signal = dataset.values[:, 0]
+    y_signal = dataset.values[:, 1]
+    normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
+    """
+    smoothed_signal, params = smoother(normalized_signal)
+
+    trace1 = go.Scatter(y=y_signal[:10000], x=x_signal[:10000], name='Signal')
+    trace2 = go.Scatter(y=smoothed_signal[:10000], x=x_signal[:10000], name='smoothed')
+    trace3 = go.Scatter(y=normalized_signal[:10000], x=x_signal[:10000], name='smoothed')
+    layout = go.Layout(title=name)
+    figure = go.Figure(data=[trace1, trace2, trace3], layout=layout)
+    py.plot(figure, filename='biosppy test of samples ' + name)
+    """
+    sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
+    sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
+
+    train_x_reshaped = np.concatenate([train_x_reshaped, sample_x_reshaped])
+    train_y = np.concatenate([train_y, sample_y])
+    print("%d ----->%s,  sampling rate=%s" % ((i + 1),name,sampling_rate))
