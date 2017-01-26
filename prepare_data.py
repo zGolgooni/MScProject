@@ -1,7 +1,12 @@
-__author__ = 'ZG'
+__author__ = 'Zeynab'
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-from settings import look_back
+from biosppy.signals.tools import smoother
+
+#set params
+look_back = 1000
+min_range = -50
+max_range = 50
 
 
 #function to load data -> number of look back pints = 100
@@ -12,12 +17,15 @@ def load_data(data, n_prev=look_back):
         doc_y.append(data.iloc[i+n_prev].as_matrix())
     als_x = np.array(doc_x)
     als_y = np.array(doc_y)
-
     return als_x, als_y
 
 
 #Normalize data in specified range
-def normalize_data(dataset, max_range=100, min_range=0):
-    scaler = MinMaxScaler(feature_range=(min_range, max_range))
+def normalize_data(dataset, max=max_range, min=min_range):
+    scaler = MinMaxScaler(feature_range=(min, max))
     data = scaler.fit_transform(dataset)
+    #move to fit baseline to zero
+    index = np.where(dataset == 0)
+    value = data[index[0][0]]
+    data = data-value
     return data
