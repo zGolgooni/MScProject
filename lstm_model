@@ -1,0 +1,18 @@
+from keras.models import Sequential
+from keras.layers.core import Dense
+from keras.layers import LSTM
+from keras.layers.core import Dense, Dropout, Activation
+
+
+def create_model(name, train_x,train_y, hidden_nodes, input, output=1, batch=10000, epoch=50,validation=0.2):
+    # create model -> here a simple LSTM
+    model = Sequential()
+    model.add(LSTM(hidden_nodes, input_dim=input, return_sequences=False))
+    model.add(Dropout(0.5))
+    model.add(Dense(output))
+    model.add(Activation('linear'))
+    model.compile(loss="mean_squared_error", optimizer="rmsprop")
+    model.fit(train_x, train_y, batch_size=batch, nb_epoch=epoch, validation_split=validation)
+    print("OK! lets check it!!")
+    model.save_weights(name+'.h5')
+    return model
