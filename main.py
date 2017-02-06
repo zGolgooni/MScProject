@@ -1,202 +1,62 @@
-import csv,pandas
+__author__ = 'Zeynab'
 import numpy as np
-import plotly.plotly as py
-import plotly.graph_objs as go
-from plotly import tools
 from scipy.stats import norm
-from keras.models import Sequential
-from prepare_data import normalize_data, load_data, look_back, horizon, min_range, max_range
-from lstm_model import create_model
-from biosppy.signals.tools import smoother
+from prepare_files import load_files
+from prepare_data import read_sample, normalize_data, load_data, prepare_for_lstm, look_back, horizon, min_range, max_range, total_length
+from lstm_model import create_model, fit_model, load_model
+from check_result import check_rmse, check_label,check_plot
+from test_model import test_files
+#from biosppy.signals.tools import smoother
+
 
 main_path = '/Users/Zeynab/PycharmProjects/Msc_project/'
 train_files = ['/My data/95.10.21.csv']
-test_files = ['/My data/95.10.15.csv','/My data/before 95.08.csv','/My data/from 95.8.2 till 95.9.17.csv']
+test_files = ['/My data/95.10.15.csv']#,'/My data/before 95.08.csv','/My data/from 95.8.2 till 95.9.17.csv']
 
-paths = []
-names = []
-sampling_rates = []
-labels = []
-for file in train_files:
-    with open(main_path + file) as csvfile:
-        readCSV = csv.reader(csvfile)
-        next(readCSV)
-        for row in readCSV:
-            path = row[0]
-            name = row[1]
-            sampling_rate = row[2]
-            label = row[3]
-            paths.append(path)
-            names.append(name)
-            sampling_rates.append(sampling_rate)
-            labels.append(label)
-        print(file + 'is read as train sample!')
-
-print('Normal and train samples:')
 #load train data
+paths, names, sampling_rates, labels = load_files(main_path, train_files)
+
+#do 1st step
 train_x_reshaped = np.empty([0, 1])
 train_y = np.empty([0, 1])
+counter = 0
 for i in range(len(names)):
-    counter=0
     if (labels[i] == 'Normal') & (counter < 5):
         counter +=1
-        dataset = pandas.read_csv(main_path + paths[i] + names[i] + '.txt', delimiter='\t', skiprows=4)
-        x_signal = dataset.values[:, 0]
-        y_signal = dataset.values[:, 1]
-        normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-        #normalized_signal, params = smoother(normalized_signal[:,0])
-        sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back,horizon)
-        sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
+        dataset, x_signal, y_signal = read_sample(paths[i], names[i])
+        sample_x, sample_y = prepare_for_lstm(y_signal)
         if i == 0:
-            train_x_reshaped = sample_x_reshaped
+            train_x_reshaped = sample_x
             train_y = sample_y
         else:
-            train_x_reshaped = np.concatenate([train_x_reshaped, sample_x_reshaped])
+            train_x_reshaped = np.concatenate([train_x_reshaped, sample_x])
             train_y = np.concatenate([train_y, sample_y])
         print("%d ----->%s, %s, sampling rate=%s" % ((i + 1), names[i], labels[i], sampling_rates[i]))
 
-model = create_model('hoztizon5-v0.h5', train_x=train_x_reshaped,train_y=train_y,hidden_nodes=100,input=look_back)
+model = create_model(hidden_nodes=100)
+model.fit_model('horizon5-v1', model, train_x=train_x_reshaped, train_y=train_y, batch=10000, epoch=50, validation=0.2)
+#model.load_model('horizon5-v0.h5')
 
 #do 2nd step
 arrhythmic_rmse = []
 normal_rmse = []
 for i in range(len(names)):
-
-    dataset = pandas.read_csv(main_path + paths[i] + names[i] + '.txt', delimiter='\t', skiprows=4)
-    x_signal = dataset.values[:, 0]
-    y_signal = dataset.values[:, 1]
-    normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-    #normalized_signal, params = smoother(normalized_signal[:, 0])
-    sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
-    sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
-    predicted = model.predict(sample_x_reshaped)
-    rmse = np.sqrt(((predicted - sample_y) ** 2).mean(axis=0))
+    predicted_signal, rmse = check_rmse(paths[i], names[i], model)
     if labels[i] == 'Normal':
         normal_rmse.append(rmse)
     else:
         arrhythmic_rmse.append(rmse)
-    print("(%s), rmse = %d, real = %s" % (name, rmse, labels[i]))
+    print("(%s), rmse = %d, real = %s" % (names[i], rmse, labels[i]))
 
 normal_mu, normal_std = norm.fit(normal_rmse)
 arrhythmic_mu, arrhythmic_std = norm.fit(arrhythmic_rmse)
-
-#test for train data
-tp = 0
-fp = 0
-tn = 0
-fn = 0
-n = 0
-for i in range(len(names)):
-    dataset = pandas.read_csv(main_path + paths[i] + names[i] + '.txt', delimiter='\t', skiprows=4)
-    x_signal = dataset.values[:, 0]
-    y_signal = dataset.values[:, 1]
-    normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-    #normalized_signal, params = smoother(normalized_signal[:, 0])
-    sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
-    sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
-    predicted = model.predict(sample_x_reshaped)
-    rmse = np.sqrt(((predicted - sample_y) ** 2).mean(axis=0))
-    p_normal = norm.pdf(rmse, normal_mu, normal_std)
-    p_arrhythmic = norm.pdf(rmse, arrhythmic_mu, arrhythmic_std)
-
-    if p_normal > p_arrhythmic:
-        predicted_label = 'Normal'
-    else:
-        predicted_label = 'Arrhythmic'
-    print("(%s), rmse = %d, real = %s, predicted = %s" % (name, rmse, labels[i], predicted))
-    n += 1
-    if labels[i] == 'Normal':
-        if predicted_label == 'Normal':
-            tp += 1
-        else:
-            fp += 1
-    else:
-        if predicted_label == 'Arrhythmic':
-            tn += 1
-        else:
-            fn += 1
-print(model.get_config())
-print('result for train data')
-print('tp = %f, tn = %f, fp = %f, fn = %f, total-> %f' %(tp,tn,fp,fn,((tp+tn)/n)))
-
-# test for test data
-paths = []
-names = []
-sampling_rates = []
-labels = []
-for file in test_files:
-    with open(main_path + file) as csvfile:
-        readCSV = csv.reader(csvfile)
-        next(readCSV)
-        for row in readCSV:
-            path = row[0]
-            name = row[1]
-            sampling_rate = row[2]
-            label = row[3]
-            paths.append(path)
-            names.append(name)
-            sampling_rates.append(sampling_rate)
-            labels.append(label)
-        print(file + 'is read as test sample!')
+print('horizon5-v1:')
+print(' Normal-> mu = %f, std = %f', normal_mu, normal_std)
+print(' Arryhthmic-> mu = %f, std = %f', arrhythmic_mu, arrhythmic_std)
 
 
-tp = 0
-fp = 0
-tn = 0
-fn = 0
-n = 0
-for i in range(len(names)):
-    dataset = pandas.read_csv(main_path + paths[i] + names[i] + '.txt', delimiter='\t', skiprows=4)
-    x_signal = dataset.values[:, 0]
-    y_signal = dataset.values[:, 1]
-    normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-    sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
-    sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
-    predicted = model.predict(sample_x_reshaped)
-    rmse = np.sqrt(((predicted - sample_y) ** 2).mean(axis=0))
-    p_normal = norm.pdf(rmse, normal_mu, normal_std)
-    p_arrhythmic = norm.pdf(rmse, arrhythmic_mu, arrhythmic_std)
+#test result for samples
 
-    if p_normal > p_arrhythmic:
-        predicted_label = 'Normal'
-    else:
-        predicted_label = 'Arrhythmic'
-    print("%d: (%s), rmse = %d, real = %s, predicted = %s" % (i,name, rmse, labels[i], predicted_label))
-    n += 1
-    if labels[i] == 'Normal':
-        if predicted_label == 'Normal':
-            tp += 1
-        else:
-            fp += 1
-    else:
-        if predicted_label == 'Arrhythmic':
-            tn += 1
-        else:
-            fn += 1
-print('result for test data:')
-print('tp = %f, tn = %f, fp = %f, fn = %f, total-> %f' %(tp,tn,fp,fn,((tp+tn)/n)))
+test_files(train_files)
+test_files(test_files())
 
-#check for single sample
-j = i
-dataset = pandas.read_csv(main_path + paths[j] + names[j] + '.txt', delimiter='\t', skiprows=4)
-x_signal = dataset.values[:, 0]
-y_signal = dataset.values[:, 1]
-normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
-sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
-predicted = model.predict(sample_x_reshaped)
-rmse = np.sqrt(((predicted - sample_y) ** 2).mean(axis=0))
-p_normal = norm.pdf(rmse, normal_mu, normal_std)
-p_arrhythmic = norm.pdf(rmse, arrhythmic_mu, arrhythmic_std)
-
-if p_normal > p_arrhythmic:
-    predicted_label = 'Normal'
-else:
-    predicted_label = 'Arrhythmic'
-print("(%s), rmse = %d, real = %s, predicted = %s" % (name, rmse, labels[i], predicted_label))
-
-trace1 = go.Scatter(y=sample_y[:7000], x=sample_x, name='Real signal')
-trace2 = go.Scatter(y=predicted[:7000], x=sample_x, name='Predicted by model')
-layout = go.Layout(title=names[i])
-figure = go.Figure(data=[trace1, trace2], layout=layout)
-py.plot(figure, filename=names[i])
