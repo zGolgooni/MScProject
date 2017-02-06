@@ -4,17 +4,19 @@ from sklearn.preprocessing import MinMaxScaler
 from biosppy.signals.tools import smoother
 
 #set params
-look_back = 1000
+look_back = 200
+horizon = 5
 min_range = -50
 max_range = 50
 
 
 #function to load data -> number of look back pints = 100
-def load_data(data, n_prev=look_back):
-    doc_x, doc_y = [], []
-    for i in range(len(data)-n_prev):
+def load_data(data, n_prev=look_back, n_next=horizon):
+    doc_x = []
+    doc_y = []
+    for i in range(len(data)-n_prev-horizon):
         doc_x.append(data.iloc[i:i+n_prev].as_matrix())
-        doc_y.append(data.iloc[i+n_prev].as_matrix())
+        doc_y.append(data.iloc[i+n_prev:i+n_prev+n_next].as_matrix())
     als_x = np.array(doc_x)
     als_y = np.array(doc_y)
     return als_x, als_y
