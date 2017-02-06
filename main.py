@@ -5,11 +5,11 @@ import plotly.graph_objs as go
 from plotly import tools
 from scipy.stats import norm
 from keras.models import Sequential
-from prepare_data import normalize_data, load_data, look_back, min_range, max_range
+from prepare_data import normalize_data, load_data, look_back, horizon, min_range, max_range
 from lstm_model import create_model
 from biosppy.signals.tools import smoother
 
-main_path = '/home/mll/Golgooni/Msc_project'
+main_path = '/Users/Zeynab/PycharmProjects/Msc_project/'
 train_files = ['/My data/95.10.21.csv']
 test_files = ['/My data/95.10.15.csv','/My data/before 95.08.csv','/My data/from 95.8.2 till 95.9.17.csv']
 
@@ -34,16 +34,18 @@ for file in train_files:
 
 print('Normal and train samples:')
 #load train data
-train_x_reshaped = np.empty([0, 1, look_back])
+train_x_reshaped = np.empty([0, 1])
 train_y = np.empty([0, 1])
 for i in range(len(names)):
-    if labels[i] == 'Normal':
+    counter=0
+    if (labels[i] == 'Normal') & (counter < 5):
+        counter +=1
         dataset = pandas.read_csv(main_path + paths[i] + names[i] + '.txt', delimiter='\t', skiprows=4)
         x_signal = dataset.values[:, 0]
         y_signal = dataset.values[:, 1]
         normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-        normalized_signal, params = smoother(normalized_signal[:,0])
-        sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
+        #normalized_signal, params = smoother(normalized_signal[:,0])
+        sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back,horizon)
         sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
         if i == 0:
             train_x_reshaped = sample_x_reshaped
@@ -53,17 +55,18 @@ for i in range(len(names)):
             train_y = np.concatenate([train_y, sample_y])
         print("%d ----->%s, %s, sampling rate=%s" % ((i + 1), names[i], labels[i], sampling_rates[i]))
 
-model = create_model('run1', train_x=train_x_reshaped,train_y=train_y,hidden_nodes=100,input=look_back)
+model = create_model('hoztizon5-v0.h5', train_x=train_x_reshaped,train_y=train_y,hidden_nodes=100,input=look_back)
 
 #do 2nd step
 arrhythmic_rmse = []
 normal_rmse = []
 for i in range(len(names)):
+
     dataset = pandas.read_csv(main_path + paths[i] + names[i] + '.txt', delimiter='\t', skiprows=4)
     x_signal = dataset.values[:, 0]
     y_signal = dataset.values[:, 1]
     normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-    normalized_signal, params = smoother(normalized_signal[:, 0])
+    #normalized_signal, params = smoother(normalized_signal[:, 0])
     sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
     sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
     predicted = model.predict(sample_x_reshaped)
@@ -88,7 +91,7 @@ for i in range(len(names)):
     x_signal = dataset.values[:, 0]
     y_signal = dataset.values[:, 1]
     normalized_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
-    normalized_signal, params = smoother(normalized_signal[:, 0])
+    #normalized_signal, params = smoother(normalized_signal[:, 0])
     sample_x, sample_y = load_data(pandas.DataFrame(normalized_signal), look_back)
     sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
     predicted = model.predict(sample_x_reshaped)
