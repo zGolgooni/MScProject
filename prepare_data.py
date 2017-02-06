@@ -1,5 +1,6 @@
 __author__ = 'Zeynab'
 import numpy as np
+import pandas
 from sklearn.preprocessing import MinMaxScaler
 from biosppy.signals.tools import smoother
 
@@ -8,6 +9,15 @@ look_back = 200
 horizon = 5
 min_range = -50
 max_range = 50
+total_length = 60000
+
+
+def read_sample(path, name):
+    dataset = pandas.read_csv(path + name + '.txt', delimiter='\t', skiprows=4)
+    x_signal = dataset.values[:total_length, 0]
+    y_signal = dataset.values[:total_length, 1]
+    y_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
+    return dataset, x_signal, y_signal
 
 
 #function to load data -> number of look back pints = 100
@@ -31,3 +41,9 @@ def normalize_data(dataset, max=max_range, min=min_range):
     value = data[index[0][0]]
     data = data-value
     return data
+
+
+def prepare_for_lstm(signal):
+    sample_x, sample_y = load_data(pandas.DataFrame(signal), look_back, horizon)
+    sample_x_reshaped = np.reshape(sample_x, (sample_x.shape[0], 1, sample_x.shape[1]))
+    return sample_x_reshaped, sample_y
