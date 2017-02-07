@@ -15,8 +15,10 @@ def test_files(path, file, model, normal_mu, normal_std, arrhythmic_mu, arrhythm
     n = 0
     for i in range(len(names)):
         predicted_signal, rmse, predicted_label = check_label(paths[i], names[i], model, normal_mu, normal_std, arrhythmic_mu, arrhythmic_std)
+        #predicted_signal, rmse, predicted_label = check_label(paths[i], names[i], model, normal_mu, normal_std, arrhythmic_mu, arrhythmic_std)
+
         #check_plot(paths[i], names[i], labels[i], model)
-        print("(%s), rmse = %d, real = %s, predicted = %s" % (names[i], rmse, labels[i], predicted_label))
+        print("(%s), rmse = %d, real = %s, predicted = %s" % (i, rmse, labels[i], predicted_label))
         n += 1
         if labels[i] == 'Normal':
             if predicted_label == 'Normal':

@@ -45,8 +45,8 @@ def check_rmse(path, name, model):
 
     print(predicted_signal.shape)
     print(y_signal.shape)
-    #rmse = np.sqrt(((predicted_signal - y_signal[look_back:predicted_signal.shape[0]+look_back,0]) ** 2).mean(axis=0))
-    rmse, p = dtw(y_signal[look_back:predicted_signal.shape[0]+look_back,0], predicted_signal)
+    rmse = np.sqrt(((predicted_signal - y_signal[look_back:predicted_signal.shape[0]+look_back,0]) ** 2).mean(axis=0))
+    #rmse, p = dtw(y_signal[look_back:predicted_signal.shape[0]+look_back,0], predicted_signal)
     #print(rmse)
     return predicted_signal, rmse
 
@@ -54,7 +54,7 @@ def check_rmse(path, name, model):
 def check_label(path, name, model, normal_mu, normal_std, arrhythmic_mu, arrhythmic_std):
     dataset, x_signal, y_signal = read_sample(path, name)
     predicted_signal, rmse = check_plot(path, name, model)
-
+    #predicted_signal, rmse = check_rmse(path, name, model)
     p_normal = norm.pdf(rmse, normal_mu, normal_std)
     p_arrhythmic = norm.pdf(rmse, arrhythmic_mu, arrhythmic_std)
 
@@ -72,8 +72,8 @@ def check_plot(path, name, model):
     predicted_signal, rmse = check_rmse(path, name, model)
     #print('%s: rmse=%f',(name,rmse))
     plot_size = 6000
-    trace1 = go.Scatter(y=y_signal[:plot_size], x=x_signal[:plot_size], name='Real signal')
-    trace2 = go.Scatter(y=predicted_signal[:plot_size], x=x_signal[:plot_size], name='Predicted by model')
+    trace1 = go.Scatter(y=y_signal[look_back:plot_size+look_back], x=x_signal[look_back:plot_size+look_back], name='Real signal')
+    trace2 = go.Scatter(y=predicted_signal[:plot_size], x=x_signal[look_back:plot_size+look_back], name='Predicted by model')
     layout = go.Layout(title=name)
     figure = go.Figure(data=[trace1, trace2], layout=layout)
     py.plot(figure, filename=name)
