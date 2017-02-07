@@ -1,0 +1,62 @@
+path,file name,Sampling rate,Real Label
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,3,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,4,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,5,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,6,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/iso-pro/,7,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Nif/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Nif/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Nif/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Nif/,3,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,3,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,4,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,5,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,6,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.4/Ver/,7,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso/,2,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso/,3,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso/,4,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso/,5,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso,6,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Iso/,7,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Ver/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Ver/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Ver/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Ver/,3,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Ver/,4,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Ver/,5,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.11/Ver/,6,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Nif/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Nif/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Nif/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Nif/,3,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Ver/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Ver/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Ver/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Ver/,3,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Ver/,4,1000,Normal
+/My data/from 95.8.2 till 95.9.17/Bam 95.8.12/Ver/,5,1000,Arrhythmic
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,3,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,4,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,5,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,6,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.7/Ver/,7,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,0,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,1,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,2,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,3,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,4,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,5,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,6,1000,Normal
+/My data/from 95.8.2 till 95.9.17/SSC1 95.9.9/iso-pro N/,7,1000,Normal

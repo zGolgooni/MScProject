@@ -1,0 +1,40 @@
+Path,name,sampling_rate,label
+/My data/before 95.08/,Control Bam QTC,1000,Normal
+/My data/before 95.08/,ES-CM N1,2000,Normal
+/My data/before 95.08/,SSC2 R1 4 29 Nov iso Control,2000,Normal
+/My data/before 95.08/,SSC2-iso 95.6.30 0nM Ch65 Control,1000,Normal
+/My data/before 95.08/,Control Bam R09,1000,Normal
+/My data/before 95.08/,SSC2 R2 7 30 Nov baseline Control,2000,Normal
+/My data/before 95.08/,SSC2 R2 DIV8 R2 6 16 Nov baseline Control,2000,Normal
+/My data/before 95.08/,iPS-CM Nr.1,2000,Normal
+/My data/before 95.08/,SSC1-Nif 95.7.10 10nM Control,1000,Normal
+/My data/before 95.08/,ES-CM N20001,2000,Normal
+/My data/before 95.08/,ES-CM Nr50002,2000,Normal
+/My data/before 95.08/,ES-CM Nr3,2000,Normal
+/My data/before 95.08/,SSC1 R2 iso-pro 95.7.12 baseline Control,1000,Normal
+/My data/before 95.08/,SSC1-baseline 5 Oct Control,2000,Normal
+/My data/before 95.08/,Control SSc2 10 Oct R2 Ver,1000,Normal
+/My data/before 95.08/,ES-CM N2,2000,Normal
+/My data/before 95.08/,SSC1 R1-baseline 7 Oct Control,2000,Normal
+/My data/before 95.08/,SSC2 R2 DIV8 R2 6 16 Nov iso Control,2000,Normal
+/My data/before 95.08/,SSC R2 1 19 Oct baseline Control,2000,Normal
+/My data/before 95.08/,SSC2 R2 3 29 Nov baseline Control,2000,Normal
+/My data/before 95.08/,ES-CM Nr5,2000,Normal
+/My data/before 95.08/,SSC2 R1 DIV8 R2 1 12 Nov Control,2000,Normal
+/My data/before 95.08/,SSC2-Nif 95.6.30 0nM Ch26 Control,1000,Normal
+/My data/before 95.08/,SSC R2 19 Oct baseline Control,1000,Normal
+/My data/before 95.08/,SSC1-iso 95.7.3 0nM Control,1000,Normal
+/My data/before 95.08/Arrhythmic/,CPVT1 Nr1 RA52 95.4.8 Baseline Arrhythmic,1000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,CPVT1 Nr1 RA52 95.4.8 iso Arrhythmic,1000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC1 R3 Nif 95.7.12 baseline Arrythmic,1000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC1 R3 Nif 100 nM 95.7.12 baseline Arrythmic,1000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC1-iso 95.7.8 100nM Ch74 Arrhythmic,1000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC2 R2 4 29 Nov baseline Arrhythmic,2000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC2 R2 8 30 Nov baseline Arrhythmic,2000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC2 R2 8 30 Nov iso Arrhythmic,2000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC2 R2 10 30 Nov baseline Arrhythmic,2000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC2 R2 10 30 Nov iso Arrhythmic,2000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,SSC2-Nif 95.6.30 0nM Ch52 Arrhythmic,1000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,C8 1-10-15 Nr3 baseline Control,2000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,C8 4-5-94 Nr2 Mex LQT Arrhythmic,2000,Arrhythmic
+/My data/before 95.08/Arrhythmic/,C8 20-6-15 Nr1 Ctr LQT Arrhythmia,2000,Arrhythmic
