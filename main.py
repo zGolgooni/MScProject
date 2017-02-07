@@ -11,14 +11,15 @@ from test_model import test_files
 #from biosppy.signals.tools import smoother
 
 
-main_path = '/Users/Zeynab/PycharmProjects/Msc_project/'
-train_files = ['/My data/95.10.21.csv']
+#main_path = '/Users/Zeynab/PycharmProjects/Msc_project/'   #Mac
+main_path = '/home/mll/Golgooni/Msc_project'        #Ubuntu
+train_files = ['/My data/before 95.08.csv']#'/My data/95.10.21.csv'
 #test_files = ['/My data/95.10.15.csv']#,'/My data/before 95.08.csv','/My data/from 95.8.2 till 95.9.17.csv']
 
 #load train data
 paths, names, sampling_rates, labels = load_files(main_path, train_files)
 
-mode = 1
+mode = 0
 if mode == 0:
     #do 1st step
     train_x_reshaped = np.empty([0, 1])
@@ -26,8 +27,8 @@ if mode == 0:
     counter = 0
     for i in range(len(names)):
         if (labels[i] == 'Normal') & (counter < 5):
-            counter +=1
-            dataset, x_signal, y_signal = read_sample(paths[i], names[i])
+            #counter +=1
+            dataset, x_signal, y_signal = read_sample(main_path + paths[i], names[i])
             sample_x, sample_y = prepare_for_lstm(y_signal)
             sample_y = sample_y[:, :, 0]
             if i == 0:
@@ -39,7 +40,7 @@ if mode == 0:
             print("%d ----->%s, %s, sampling rate=%s" % ((i + 1), names[i], labels[i], sampling_rates[i]))
 
     model = create_model(hidden_nodes=100)
-    fit_model('horizon5-v1', model, train_x=train_x_reshaped, train_y=train_y, batch=10000, epoch=50, validation=0.2)
+    fit_model('horizon5-v2_train before9508hidden100_lookback500', model, train_x=train_x_reshaped, train_y=train_y, batch=10000, epoch=50, validation=0.2)
 else:
     model = create_model(hidden_nodes=100)
     #model = load_model(model,'horizon5-v1.h5')
@@ -50,7 +51,7 @@ if mode == 0:
     arrhythmic_rmse = []
     normal_rmse = []
     for i in range(len(names)):
-        predicted_signal, rmse = check_rmse(paths[i], names[i], model = model)
+        predicted_signal, rmse = check_rmse(main_path + paths[i], names[i], model = model)
         if labels[i] == 'Normal':
             normal_rmse.append(rmse)
         else:
@@ -70,7 +71,6 @@ else:
 #classification_model =
 
 #test result for samples
-
 test_files('/Users/Zeynab/PycharmProjects/Msc_project/','/My data/95.10.21.csv',model=model, normal_mu=normal_mu, normal_std=normal_std, arrhythmic_mu=arrhythmic_mu, arrhythmic_std=arrhythmic_std)
-#test_files('/Users/Zeynab/PycharmProjects/Msc_project/','/My data/95.10.15.csv',model=model, normal_mu=normal_mu, normal_std=normal_std, arrhythmic_mu=arrhythmic_mu, arrhythmic_std=arrhythmic_std)
-
+test_files('/Users/Zeynab/PycharmProjects/Msc_project/','/My data/95.10.15.csv',model=model, normal_mu=normal_mu, normal_std=normal_std, arrhythmic_mu=arrhythmic_mu, arrhythmic_std=arrhythmic_std)
+test_files('/Users/Zeynab/PycharmProjects/Msc_project/','/My data/before 95.08.csv',model=model, normal_mu=normal_mu, normal_std=normal_std, arrhythmic_mu=arrhythmic_mu, arrhythmic_std=arrhythmic_std)
