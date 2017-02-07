@@ -2,6 +2,27 @@ __author__ = 'Zeynab'
 import csv
 
 
+def load_file(path, file):
+    paths = []
+    names = []
+    sampling_rates = []
+    labels = []
+    with open(path + file) as csvfile:
+        readCSV = csv.reader(csvfile)
+        next(readCSV)
+        for row in readCSV:
+            path = row[0]
+            name = row[1]
+            sampling_rate = row[2]
+            label = row[3]
+            paths.append(path)
+            names.append(name)
+            sampling_rates.append(sampling_rate)
+            labels.append(label)
+    print(file + 'is read!')
+    return paths,names,sampling_rates,labels
+
+
 def load_files(path, files):
     paths = []
     names = []

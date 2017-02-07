@@ -8,6 +8,7 @@ import numpy as np
 
 num_hidden_nodes = 100
 
+
 def create_model(hidden_nodes=num_hidden_nodes, input_size=look_back, output_size=horizon):
     # create model -> here a simple LSTM
     model = Sequential()
@@ -26,6 +27,6 @@ def fit_model(name,model,train_x,train_y, batch=10000, epoch=50, validation=0.2)
     return model
 
 
-def load_model(name,model):
+def load_model(model,name):
     model.load_weights(name)
     return model

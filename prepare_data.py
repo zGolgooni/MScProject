@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 from biosppy.signals.tools import smoother
 
 #set params
-look_back = 200
+look_back = 500
 horizon = 5
 min_range = -50
 max_range = 50
@@ -13,7 +13,9 @@ total_length = 60000
 
 
 def read_sample(path, name):
+    #print('1')
     dataset = pandas.read_csv(path + name + '.txt', delimiter='\t', skiprows=4)
+    #print('2')
     x_signal = dataset.values[:total_length, 0]
     y_signal = dataset.values[:total_length, 1]
     y_signal = normalize_data(pandas.DataFrame(y_signal), max_range, min_range)
